@@ -5,6 +5,8 @@ export type MachineInputField = {
   key: string;
   label: string;
   unit: string;
+  type?: 'number' | 'select';
+  options?: string[];
   placeholder?: string;
   description?: string;
 };
@@ -16,6 +18,8 @@ export type Machine = {
   category: MachineCategory;
   subCategory?: string;
   releaseYear?: number;
+  description?: string;
+  sourceUrl?: string;
   /** Base payback rates per setting [s1, s2, s3, s4, s5, s6] */
   paybackRates: [number, number, number, number, number, number];
   /** Machine-specific additional input fields */

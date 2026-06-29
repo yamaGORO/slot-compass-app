@@ -72,7 +72,7 @@ https://yamaGORO.github.io/slot-compass-app/
 
 仮の分布・補正値は `data/calculation-placeholder.ts` に分離しています。将来、本計算ロジックや正式な機種スペックへ差し替える場合は、UI側ではなくこの周辺を置き換えてください。
 
-機種マスタの現在データは `data/machines.ts` にあります。ここも本番投入前に正式データへ差し替える前提です。
+機種マスタの現在データは `data/machines.ts` にあります。参照用に受け取ったSlot Compassデータパッケージ内の機種名・追加入力項目を反映しています。計算値が参照データに含まれていない箇所は、仮データとして明確に分離しています。
 
 ## 変更したファイル一覧
 
@@ -85,6 +85,7 @@ https://yamaGORO.github.io/slot-compass-app/
 - `app/result/page.tsx`
 - `app/settings/page.tsx`
 - `components/home/ExpectedValueCard.tsx`
+- `components/layout/AccessGate.tsx`
 - `data/calculation-placeholder.ts`
 - `data/machines.ts`
 - `lib/calculation/placeholder-engine.ts`

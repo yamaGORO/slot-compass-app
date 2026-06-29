@@ -50,6 +50,51 @@ function InputField({ icon, label, unit, value, onChange, inputMode = 'numeric',
   );
 }
 
+interface SelectFieldProps {
+  label: string;
+  unit: string;
+  value: string;
+  options: string[];
+  onChange: (v: string) => void;
+  description?: string;
+}
+
+function SelectField({ label, unit, value, options, onChange, description }: SelectFieldProps) {
+  return (
+    <div
+      className="flex items-center justify-between px-3 py-2.5 rounded-xl"
+      style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.07)' }}
+    >
+      <div className="flex items-start gap-1.5 min-w-0 flex-1">
+        <div className="min-w-0">
+          <p className="text-[10px] font-medium text-[#444444] leading-tight break-keep">{label}</p>
+          {description && <p className="text-[9px] text-[#aaaaaa] leading-tight mt-0.5">{description}</p>}
+        </div>
+      </div>
+      <div className="relative flex items-center gap-1 flex-shrink-0 ml-1.5 min-w-0 max-w-[58%]">
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="appearance-none w-full min-w-0 pr-5 text-right text-xs font-bold text-[#111111] bg-transparent outline-none truncate"
+          aria-label={label}
+        >
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+        <ChevronDown
+          size={11}
+          className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none"
+          color="#999999"
+        />
+        {unit && <span className="text-[10px] text-[#999999] w-4 text-left">{unit}</span>}
+      </div>
+    </div>
+  );
+}
+
 // ─── Time input ───────────────────────────────────────────────────────────────
 interface TimeFieldProps {
   hours: string;
@@ -135,6 +180,18 @@ function CalculationContent() {
   const setExtra = (key: string) => (val: string) =>
     setExtraInputs((p) => ({ ...p, [key]: val }));
 
+  const getNormalizedExtraInputs = () => {
+    if (!machine) return extraInputs;
+
+    return machine.extraFields.reduce<ExtraInputs>((acc, field) => {
+      acc[field.key] =
+        field.type === 'select'
+          ? extraInputs[field.key] || field.options?.[0] || ''
+          : extraInputs[field.key] ?? '';
+      return acc;
+    }, {});
+  };
+
   const handleReset = () => {
     setInputs({ totalGames: '', currentGames: '', bbCount: '', rbCount: '', remainingHours: '', remainingMinutes: '' });
     setExtraInputs({});
@@ -144,7 +201,8 @@ function CalculationContent() {
     if (!machine) return;
     setIsCalculating(true);
     const settings = getSettings();
-    const result = calculateExpectedValue(machine, inputs, extraInputs, settings);
+    const normalizedExtraInputs = getNormalizedExtraInputs();
+    const result = calculateExpectedValue(machine, inputs, normalizedExtraInputs, settings);
     saveCurrentResult(result);
     addToHistory(result);
     setRecentMachineId(machine.id);
@@ -342,17 +400,29 @@ function CalculationContent() {
               </span>
             </div>
             <div className="p-3 space-y-2">
-              {machine.extraFields.map((field) => (
-                <InputField
-                  key={field.key}
-                  label={field.label}
-                  unit={field.unit}
-                  value={extraInputs[field.key] ?? ''}
-                  onChange={setExtra(field.key)}
-                  description={field.description}
-                  inputMode="numeric"
-                />
-              ))}
+              {machine.extraFields.map((field) =>
+                field.type === 'select' ? (
+                  <SelectField
+                    key={field.key}
+                    label={field.label}
+                    unit={field.unit}
+                    value={extraInputs[field.key] || field.options?.[0] || ''}
+                    options={field.options ?? []}
+                    onChange={setExtra(field.key)}
+                    description={field.description}
+                  />
+                ) : (
+                  <InputField
+                    key={field.key}
+                    label={field.label}
+                    unit={field.unit}
+                    value={extraInputs[field.key] ?? ''}
+                    onChange={setExtra(field.key)}
+                    description={field.description}
+                    inputMode="numeric"
+                  />
+                ),
+              )}
             </div>
           </div>
         )}
