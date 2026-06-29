@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono, Noto_Sans_JP } from 'next/font/google'
+import AccessGate from '@/components/layout/AccessGate'
 import BottomNav from '@/components/layout/BottomNav'
 import './globals.css'
 
@@ -61,13 +62,15 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${notoSansJP.variable} bg-[#080808]`}
     >
       <body className="font-sans antialiased bg-[#080808] text-white min-h-screen">
-        {/* Max-width container centered for larger screens, full-width for mobile */}
-        <div className="mx-auto max-w-[430px] relative min-h-screen">
-          <main className="pb-20">
-            {children}
-          </main>
-          <BottomNav />
-        </div>
+        <AccessGate>
+          {/* Max-width container centered for larger screens, full-width for mobile */}
+          <div className="mx-auto max-w-[430px] relative min-h-screen">
+            <main className="pb-20">
+              {children}
+            </main>
+            <BottomNav />
+          </div>
+        </AccessGate>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
