@@ -1,0 +1,327 @@
+import type { Machine } from '@/types';
+
+// Temporary machine master for UI and placeholder calculations.
+// Replace these fixtures with verified production data when the calculation
+// engine is connected to a real machine-spec dataset.
+export const MACHINES: Machine[] = [
+  // ─── Aタイプ ─────────────────────────────────────────────────────────────────
+  {
+    id: 'mayjuggler-v',
+    name: 'マイジャグラーV',
+    maker: 'NORTH PLANET',
+    category: 'Aタイプ',
+    subCategory: 'ノーマル',
+    releaseYear: 2022,
+    paybackRates: [96.8, 98.0, 99.3, 101.6, 103.2, 106.4],
+    bbProbability: [1/280, 1/273, 1/264, 1/255, 1/248, 1/231],
+    rbProbability: [1/631, 1/500, 1/409, 1/315, 1/286, 1/218],
+    extraFields: [
+      { key: 'grapeCount', label: 'ブドウ回数', unit: '回', description: 'ブドウ成立回数' },
+      { key: 'singleRbCount', label: '単独RB回数', unit: '回', description: 'BB経由なしのRB回数' },
+    ],
+  },
+  {
+    id: 'gogo-juggler-3',
+    name: 'ゴーゴージャグラー3',
+    maker: 'NORTH PLANET',
+    category: 'Aタイプ',
+    subCategory: 'ノーマル',
+    releaseYear: 2022,
+    paybackRates: [96.3, 97.7, 99.5, 101.7, 103.3, 106.9],
+    bbProbability: [1/269, 1/260, 1/252, 1/240, 1/234, 1/214],
+    rbProbability: [1/676, 1/568, 1/462, 1/357, 1/308, 1/219],
+    extraFields: [
+      { key: 'grapeCount', label: 'ブドウ回数', unit: '回' },
+    ],
+  },
+  {
+    id: 'isekai-juggler-v',
+    name: '異世界おじさんジャグラーV',
+    maker: 'NORTH PLANET',
+    category: 'Aタイプ',
+    subCategory: 'ノーマル',
+    releaseYear: 2024,
+    paybackRates: [96.8, 98.0, 99.3, 101.6, 103.2, 106.4],
+    bbProbability: [1/280, 1/273, 1/264, 1/255, 1/248, 1/231],
+    rbProbability: [1/631, 1/500, 1/409, 1/315, 1/286, 1/218],
+    extraFields: [
+      { key: 'grapeCount', label: 'ブドウ回数', unit: '回' },
+      { key: 'singleRbCount', label: '単独RB回数', unit: '回' },
+    ],
+  },
+  {
+    id: 'hana-juggler-v',
+    name: 'ハナハナジャグラーV',
+    maker: 'SNK',
+    category: 'Aタイプ',
+    subCategory: 'ノーマル',
+    releaseYear: 2023,
+    paybackRates: [97.0, 98.5, 99.6, 101.9, 103.8, 107.0],
+    bbProbability: [1/285, 1/268, 1/256, 1/244, 1/230, 1/210],
+    rbProbability: [1/620, 1/490, 1/400, 1/310, 1/280, 1/215],
+    extraFields: [
+      { key: 'grapeCount', label: 'ブドウ回数', unit: '回' },
+    ],
+  },
+  {
+    id: 'lucky-happy-7',
+    name: 'ラッキーハッピー7',
+    maker: 'SANYO',
+    category: 'Aタイプ',
+    subCategory: 'ノーマル',
+    releaseYear: 2023,
+    paybackRates: [97.1, 98.3, 99.7, 102.0, 103.6, 106.8],
+    bbProbability: [1/290, 1/275, 1/258, 1/248, 1/238, 1/220],
+    rbProbability: [1/640, 1/510, 1/415, 1/320, 1/295, 1/222],
+    extraFields: [],
+  },
+
+  // ─── スマスロ AT機 ────────────────────────────────────────────────────────────
+  {
+    id: 'monkey-turn-v',
+    name: 'モンキーターンV',
+    maker: 'OLYMPIA',
+    category: 'スマスロ',
+    subCategory: 'AT機',
+    releaseYear: 2023,
+    paybackRates: [97.0, 98.5, 99.9, 101.2, 103.0, 106.8],
+    ceilingGames: 1600,
+    extraFields: [
+      { key: 'atIntervalGames', label: 'AT間ゲーム数', unit: 'G', description: '最後のAT終了からのゲーム数' },
+      { key: 'czIntervalGames', label: 'CZ間ゲーム数', unit: 'G' },
+      { key: 'cycleCount', label: '周期数', unit: '周期' },
+      { key: 'throughCount', label: 'スルー回数', unit: '回' },
+    ],
+  },
+  {
+    id: 'varg-leiv',
+    name: 'ヴァルグレイヴ',
+    maker: 'OLYMPIA',
+    category: 'スマスロ',
+    subCategory: 'AT機',
+    releaseYear: 2023,
+    paybackRates: [97.5, 98.8, 100.0, 101.5, 103.5, 107.0],
+    ceilingGames: 1400,
+    extraFields: [
+      { key: 'atIntervalGames', label: 'AT間ゲーム数', unit: 'G' },
+      { key: 'czIntervalGames', label: 'CZ間ゲーム数', unit: 'G' },
+      { key: 'throughCount', label: 'スルー回数', unit: '回' },
+      { key: 'modeHintCount', label: 'モード示唆回数', unit: '回' },
+    ],
+  },
+  {
+    id: 'karakuri-circus',
+    name: 'からくりサーカス',
+    maker: 'DAITO',
+    category: 'スマスロ',
+    subCategory: 'AT機',
+    releaseYear: 2023,
+    paybackRates: [97.2, 98.6, 100.1, 101.8, 103.8, 107.5],
+    ceilingGames: 1500,
+    extraFields: [
+      { key: 'atIntervalGames', label: 'AT間ゲーム数', unit: 'G' },
+      { key: 'czIntervalGames', label: 'CZ間ゲーム数', unit: 'G' },
+      { key: 'cycleCount', label: '周期数', unit: '周期' },
+      { key: 'throughCount', label: 'スルー回数', unit: '回' },
+      { key: 'specialStateCount', label: '特殊状態回数', unit: '回' },
+    ],
+  },
+  {
+    id: 'hokuto-no-ken',
+    name: '北斗の拳',
+    maker: 'SAMMY',
+    category: 'スマスロ',
+    subCategory: 'AT機',
+    releaseYear: 2023,
+    paybackRates: [97.4, 98.7, 100.0, 101.6, 103.6, 107.2],
+    ceilingGames: 1600,
+    extraFields: [
+      { key: 'atIntervalGames', label: 'AT間ゲーム数', unit: 'G' },
+      { key: 'czIntervalGames', label: 'CZ間ゲーム数', unit: 'G' },
+      { key: 'throughCount', label: 'スルー回数', unit: '回' },
+      { key: 'battleCount', label: 'バトル回数', unit: '回' },
+    ],
+  },
+  {
+    id: 'evangelion-neon',
+    name: 'エヴァンゲリオン魂の軌跡',
+    maker: 'HEIWA',
+    category: 'スマスロ',
+    subCategory: 'AT機',
+    releaseYear: 2024,
+    paybackRates: [97.1, 98.4, 99.8, 101.4, 103.3, 106.9],
+    ceilingGames: 1200,
+    extraFields: [
+      { key: 'atIntervalGames', label: 'AT間ゲーム数', unit: 'G' },
+      { key: 'czIntervalGames', label: 'CZ間ゲーム数', unit: 'G' },
+      { key: 'throughCount', label: 'スルー回数', unit: '回' },
+    ],
+  },
+  {
+    id: 'gantz-extreme',
+    name: 'GANTZ EXTREME',
+    maker: 'DAITO',
+    category: 'スマスロ',
+    subCategory: 'AT機',
+    releaseYear: 2024,
+    paybackRates: [97.3, 98.7, 100.0, 101.5, 103.4, 107.0],
+    ceilingGames: 1400,
+    extraFields: [
+      { key: 'atIntervalGames', label: 'AT間ゲーム数', unit: 'G' },
+      { key: 'czIntervalGames', label: 'CZ間ゲーム数', unit: 'G' },
+      { key: 'cycleCount', label: '周期数', unit: '周期' },
+      { key: 'throughCount', label: 'スルー回数', unit: '回' },
+    ],
+  },
+  {
+    id: 'slime-isekai',
+    name: '転スラ〜リムル伝説〜',
+    maker: 'OLYMPIA',
+    category: 'スマスロ',
+    subCategory: 'AT機',
+    releaseYear: 2024,
+    paybackRates: [97.0, 98.5, 100.0, 101.8, 103.5, 107.0],
+    ceilingGames: 1500,
+    extraFields: [
+      { key: 'atIntervalGames', label: 'AT間ゲーム数', unit: 'G' },
+      { key: 'cycleCount', label: '周期数', unit: '周期' },
+      { key: 'throughCount', label: 'スルー回数', unit: '回' },
+    ],
+  },
+  {
+    id: 'kimetsu-yaiba',
+    name: '鬼滅の刃',
+    maker: 'SAMMY',
+    category: 'スマスロ',
+    subCategory: 'AT機',
+    releaseYear: 2023,
+    paybackRates: [97.0, 98.4, 99.9, 101.5, 103.4, 107.1],
+    ceilingGames: 1200,
+    extraFields: [
+      { key: 'atIntervalGames', label: 'AT間ゲーム数', unit: 'G' },
+      { key: 'czIntervalGames', label: 'CZ間ゲーム数', unit: 'G' },
+      { key: 'throughCount', label: 'スルー回数', unit: '回' },
+    ],
+  },
+  {
+    id: 'fullmetal-alchemist',
+    name: '鋼の錬金術師',
+    maker: 'DAITO',
+    category: 'スマスロ',
+    subCategory: 'AT機',
+    releaseYear: 2024,
+    paybackRates: [97.2, 98.6, 100.0, 101.7, 103.6, 107.3],
+    ceilingGames: 1400,
+    extraFields: [
+      { key: 'atIntervalGames', label: 'AT間ゲーム数', unit: 'G' },
+      { key: 'czIntervalGames', label: 'CZ間ゲーム数', unit: 'G' },
+      { key: 'throughCount', label: 'スルー回数', unit: '回' },
+      { key: 'transmutationCount', label: '錬成回数', unit: '回' },
+    ],
+  },
+  {
+    id: 'one-piece-million',
+    name: 'ワンピース〜百獣海賊団〜',
+    maker: 'SANYO',
+    category: 'スマスロ',
+    subCategory: 'AT機',
+    releaseYear: 2024,
+    paybackRates: [97.1, 98.5, 100.0, 101.6, 103.5, 107.0],
+    ceilingGames: 1500,
+    extraFields: [
+      { key: 'atIntervalGames', label: 'AT間ゲーム数', unit: 'G' },
+      { key: 'cycleCount', label: '周期数', unit: '周期' },
+      { key: 'throughCount', label: 'スルー回数', unit: '回' },
+    ],
+  },
+  {
+    id: 'dororo',
+    name: 'どろろ百鬼ばたらき',
+    maker: 'HEIWA',
+    category: 'スマスロ',
+    subCategory: 'AT機',
+    releaseYear: 2024,
+    paybackRates: [97.3, 98.7, 100.1, 101.8, 103.7, 107.2],
+    ceilingGames: 1200,
+    extraFields: [
+      { key: 'atIntervalGames', label: 'AT間ゲーム数', unit: 'G' },
+      { key: 'throughCount', label: 'スルー回数', unit: '回' },
+      { key: 'modeHintCount', label: 'モード示唆回数', unit: '回' },
+    ],
+  },
+  {
+    id: 'golden-kamuy',
+    name: 'ゴールデンカムイ',
+    maker: 'YAMASA',
+    category: 'スマスロ',
+    subCategory: 'AT機',
+    releaseYear: 2024,
+    paybackRates: [97.0, 98.5, 100.0, 101.5, 103.3, 107.0],
+    ceilingGames: 1600,
+    extraFields: [
+      { key: 'atIntervalGames', label: 'AT間ゲーム数', unit: 'G' },
+      { key: 'czIntervalGames', label: 'CZ間ゲーム数', unit: 'G' },
+      { key: 'cycleCount', label: '周期数', unit: '周期' },
+      { key: 'throughCount', label: 'スルー回数', unit: '回' },
+    ],
+  },
+  {
+    id: 'tensei-shitara',
+    name: '転生したらスライムだった件',
+    maker: 'OLYMPIA',
+    category: 'スマスロ',
+    subCategory: 'AT機',
+    releaseYear: 2023,
+    paybackRates: [97.2, 98.6, 100.0, 101.7, 103.5, 107.1],
+    ceilingGames: 1400,
+    extraFields: [
+      { key: 'atIntervalGames', label: 'AT間ゲーム数', unit: 'G' },
+      { key: 'throughCount', label: 'スルー回数', unit: '回' },
+    ],
+  },
+  {
+    id: 'hajime-no-ippo',
+    name: 'はじめの一歩4',
+    maker: 'SAMMY',
+    category: 'スマスロ',
+    subCategory: 'AT機',
+    releaseYear: 2024,
+    paybackRates: [97.0, 98.4, 99.9, 101.5, 103.2, 106.8],
+    ceilingGames: 1500,
+    extraFields: [
+      { key: 'atIntervalGames', label: 'AT間ゲーム数', unit: 'G' },
+      { key: 'czIntervalGames', label: 'CZ間ゲーム数', unit: 'G' },
+      { key: 'throughCount', label: 'スルー回数', unit: '回' },
+    ],
+  },
+  {
+    id: 'danmachi',
+    name: 'ダンまち〜メモリア・フレーゼ〜',
+    maker: 'HEIWA',
+    category: 'スマスロ',
+    subCategory: 'AT機',
+    releaseYear: 2024,
+    paybackRates: [97.1, 98.5, 100.0, 101.6, 103.4, 107.0],
+    ceilingGames: 1200,
+    extraFields: [
+      { key: 'atIntervalGames', label: 'AT間ゲーム数', unit: 'G' },
+      { key: 'throughCount', label: 'スルー回数', unit: '回' },
+    ],
+  },
+];
+
+export const getMachineById = (id: string): Machine | undefined =>
+  MACHINES.find((m) => m.id === id);
+
+export const getFeaturedMachines = (): Machine[] =>
+  MACHINES.slice(0, 8);
+
+export const searchMachines = (query: string): Machine[] => {
+  const q = query.toLowerCase();
+  return MACHINES.filter(
+    (m) =>
+      m.name.toLowerCase().includes(q) ||
+      m.maker.toLowerCase().includes(q) ||
+      m.category.toLowerCase().includes(q),
+  );
+};

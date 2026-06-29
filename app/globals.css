@@ -1,0 +1,156 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-noto-jp), var(--font-geist-sans), 'Helvetica Neue', sans-serif;
+  --font-mono: var(--font-geist-mono), 'Geist Mono Fallback', monospace;
+
+  /* Gold palette */
+  --color-gold-100: #fdf3d0;
+  --color-gold-200: #f8e08a;
+  --color-gold-300: #e8c64a;
+  --color-gold-400: #d4a017;
+  --color-gold-500: #c9962a;
+  --color-gold-600: #b8860b;
+  --color-gold-700: #9a6f08;
+  --color-gold-800: #7a5606;
+  --color-gold-900: #4a3304;
+
+  /* App surfaces */
+  --color-surface-base: #080808;
+  --color-surface-card: #111111;
+  --color-surface-elevated: #1a1a1a;
+  --color-surface-input: #1e1e1e;
+  --color-surface-white: #ffffff;
+
+  /* Semantic */
+  --color-background: var(--color-surface-base);
+  --color-foreground: #f0f0f0;
+  --color-card: var(--color-surface-card);
+  --color-card-foreground: #f0f0f0;
+  --color-primary: var(--color-gold-500);
+  --color-primary-foreground: #080808;
+  --color-secondary: var(--color-surface-elevated);
+  --color-secondary-foreground: #f0f0f0;
+  --color-muted: #222222;
+  --color-muted-foreground: #888888;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-input: var(--color-surface-input);
+  --color-ring: var(--color-gold-500);
+  --color-accent: var(--color-gold-500);
+  --color-accent-foreground: #080808;
+  --color-destructive: #e05252;
+  --color-popover: var(--color-surface-elevated);
+  --color-popover-foreground: #f0f0f0;
+
+  /* Chart */
+  --color-chart-1: var(--color-gold-500);
+  --color-chart-2: var(--color-gold-300);
+  --color-chart-3: #888;
+  --color-chart-4: #555;
+  --color-chart-5: #333;
+
+  --radius: 0.75rem;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+
+  /* Sidebar (unused but required by shadcn tokens) */
+  --color-sidebar-ring: var(--color-ring);
+  --color-sidebar-border: var(--color-border);
+  --color-sidebar-accent-foreground: var(--color-accent-foreground);
+  --color-sidebar-accent: var(--color-accent);
+  --color-sidebar-primary-foreground: var(--color-primary-foreground);
+  --color-sidebar-primary: var(--color-primary);
+  --color-sidebar-foreground: var(--color-foreground);
+  --color-sidebar: var(--color-surface-card);
+}
+
+:root {
+  color-scheme: dark;
+  --background: #080808;
+  --foreground: #f0f0f0;
+  --card: #111111;
+  --card-foreground: #f0f0f0;
+  --popover: #1a1a1a;
+  --popover-foreground: #f0f0f0;
+  --primary: #c9962a;
+  --primary-foreground: #080808;
+  --secondary: #1a1a1a;
+  --secondary-foreground: #f0f0f0;
+  --muted: #222222;
+  --muted-foreground: #888888;
+  --accent: #c9962a;
+  --accent-foreground: #080808;
+  --destructive: #e05252;
+  --border: rgba(255,255,255,0.08);
+  --input: #1e1e1e;
+  --ring: #c9962a;
+  --chart-1: #c9962a;
+  --chart-2: #e8c64a;
+  --chart-3: #888;
+  --chart-4: #555;
+  --chart-5: #333;
+  --radius: 0.75rem;
+  --sidebar: #111111;
+  --sidebar-foreground: #f0f0f0;
+  --sidebar-primary: #c9962a;
+  --sidebar-primary-foreground: #080808;
+  --sidebar-accent: #1a1a1a;
+  --sidebar-accent-foreground: #f0f0f0;
+  --sidebar-border: rgba(255,255,255,0.08);
+  --sidebar-ring: #c9962a;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  html {
+    @apply bg-background;
+  }
+}
+
+/* Scrollbar hiding for horizontal scrolls */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Gold shimmer animation */
+@keyframes gold-shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    #b8860b 0%,
+    #e8c64a 40%,
+    #c9962a 60%,
+    #b8860b 100%
+  );
+  background-size: 200% auto;
+  animation: gold-shimmer 3s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Tab safe area padding */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
