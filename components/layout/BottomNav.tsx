@@ -17,6 +17,9 @@ export default function BottomNav() {
 
   // Map result page to calculation tab for nav highlighting
   const activePathname = pathname === '/result' ? '/calculation' : pathname;
+  const requestCalculation = () => {
+    window.dispatchEvent(new CustomEvent('slot-compass:calculate'));
+  };
 
   return (
     <nav
@@ -35,14 +38,10 @@ export default function BottomNav() {
               const isActive = activePathname === tab.href;
 
               if (tab.primary) {
-                return (
-                  <Link
-                    key={tab.href}
-                    href={tab.href}
-                    className="flex flex-col items-center justify-end pb-2 -mt-5 flex-1"
-                    aria-label={tab.label}
-                    aria-current={isActive ? 'page' : undefined}
-                  >
+                const primaryClassName =
+                  'flex flex-col items-center justify-end pb-2 -mt-5 flex-1 appearance-none border-0 bg-transparent px-0 pt-0 text-inherit';
+                const primaryContent = (
+                  <>
                     <div
                       className="w-14 h-14 flex items-center justify-center transition-transform active:scale-95"
                       style={{
@@ -54,6 +53,33 @@ export default function BottomNav() {
                       <Icon size={24} color={isActive ? '#031052' : '#f8fbff'} strokeWidth={2.5} />
                     </div>
                     <span className="retro-label mt-1 text-[9px]">{tab.label}</span>
+                  </>
+                );
+
+                if (pathname === '/calculation') {
+                  return (
+                    <button
+                      key={tab.href}
+                      type="button"
+                      onClick={requestCalculation}
+                      className={primaryClassName}
+                      aria-label={`${tab.label}して結果を表示`}
+                      aria-current={isActive ? 'page' : undefined}
+                    >
+                      {primaryContent}
+                    </button>
+                  );
+                }
+
+                return (
+                  <Link
+                    key={tab.href}
+                    href={tab.href}
+                    className={primaryClassName}
+                    aria-label={tab.label}
+                    aria-current={isActive ? 'page' : undefined}
+                  >
+                    {primaryContent}
                   </Link>
                 );
               }

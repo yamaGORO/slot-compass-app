@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MACHINES, getMachineById } from '@/data/machines';
 import { calculateExpectedValue } from '@/lib/calculator';
@@ -69,7 +69,7 @@ function CalculationContent() {
   const setExtra = (key: string) => (value: string) =>
     setExtraInputs((prev) => ({ ...prev, [key]: value }));
 
-  const getNormalizedExtraInputs = () => {
+  const getNormalizedExtraInputs = useCallback(() => {
     if (!machine) return extraInputs;
 
     return machine.extraFields.reduce<ExtraInputs>((acc, field) => {
@@ -79,7 +79,7 @@ function CalculationContent() {
           : extraInputs[field.key] ?? '';
       return acc;
     }, {});
-  };
+  }, [machine, extraInputs]);
 
   const handleReset = () => {
     setInputs({
@@ -93,8 +93,14 @@ function CalculationContent() {
     setExtraInputs({});
   };
 
-  const handleCalculate = () => {
-    if (!machine) return;
+  const hasMinimumData = Boolean(
+    selectedMachineId &&
+    inputs.totalGames &&
+    Number(inputs.totalGames) > 0,
+  );
+
+  const handleCalculate = useCallback(() => {
+    if (!machine || !hasMinimumData || isCalculating) return;
     setIsCalculating(true);
     const settings = getSettings();
     const normalizedExtraInputs = getNormalizedExtraInputs();
@@ -106,13 +112,12 @@ function CalculationContent() {
       setIsCalculating(false);
       router.push('/result');
     }, 250);
-  };
+  }, [machine, hasMinimumData, isCalculating, getNormalizedExtraInputs, inputs, router]);
 
-  const hasMinimumData = Boolean(
-    selectedMachineId &&
-    inputs.totalGames &&
-    Number(inputs.totalGames) > 0,
-  );
+  useEffect(() => {
+    window.addEventListener('slot-compass:calculate', handleCalculate);
+    return () => window.removeEventListener('slot-compass:calculate', handleCalculate);
+  }, [handleCalculate]);
 
   const bonusCount = Number(inputs.bbCount) + Number(inputs.rbCount);
   const bonusRatio =
