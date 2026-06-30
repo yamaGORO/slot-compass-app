@@ -86,7 +86,7 @@ export type HistoryEntry = CalculationResult & {
 // ─── Settings ─────────────────────────────────────────────────────────────────
 export type AppSettings = {
   medalRate: number;          // 貸しメダル (e.g. 20円 or 4円)
-  exchangeRate: number;       // 交換率 枚/円
+  exchangeRate: number;       // 交換率（100円あたりの交換枚数。5.5枚交換なら5.5）
   useCashMedals: boolean;     // 持ちメダル優先
   gamesPerHour: number;       // 1時間あたり消化ゲーム数
   estimatedLossMinutes: number; // 見込みロス時間（分）

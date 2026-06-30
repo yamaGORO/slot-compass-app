@@ -21,6 +21,8 @@ type CalculationRequest = {
 };
 
 const settingKeys: (keyof SettingDistribution)[] = ['s1', 's2', 's3', 's4', 's5', 's6'];
+const MEDALS_PER_GAME = 3;
+const EXCHANGE_YEN_UNIT = 100;
 
 const safe = (value: string | undefined): number => {
   const n = Number.parseFloat(value ?? '');
@@ -80,6 +82,19 @@ function estimatedSettingMean(dist: SettingDistribution): number {
   return vals.reduce((acc, p, i) => acc + p * (i + 1), 0);
 }
 
+function estimateExpectedValuePerHour(estimatedPayback: number, settings: AppSettings): number {
+  const wagerMedalsPerHour = settings.gamesPerHour * MEDALS_PER_GAME;
+  const payoutMedalsPerHour = wagerMedalsPerHour * (estimatedPayback / 100);
+  const netMedalsPerHour = payoutMedalsPerHour - wagerMedalsPerHour;
+  const exchangeYenPerMedal = EXCHANGE_YEN_UNIT / Math.max(0.1, settings.exchangeRate);
+
+  if (settings.useCashMedals) {
+    return netMedalsPerHour * exchangeYenPerMedal;
+  }
+
+  return payoutMedalsPerHour * exchangeYenPerMedal - wagerMedalsPerHour * settings.medalRate;
+}
+
 export function calculateWithPlaceholderEngine({
   machine,
   inputs,
@@ -90,9 +105,6 @@ export function calculateWithPlaceholderEngine({
   const bbCount = safe(inputs.bbCount);
   const rbCount = safe(inputs.rbCount);
   const remainingHours = safe(inputs.remainingHours) + safe(inputs.remainingMinutes) / 60;
-  const gamesPerHour = settings.gamesPerHour;
-  const medalRate = settings.medalRate;
-  const exchangeRate = settings.exchangeRate;
 
   const dist = computePosterior(
     machine,
@@ -105,8 +117,7 @@ export function calculateWithPlaceholderEngine({
   const estimatedPayback = estimatePayback(machine, dist);
   const estimatedSetting = estimatedSettingMean(dist);
 
-  const expectedValuePerHour =
-    ((estimatedPayback / 100 - 1) * gamesPerHour * medalRate) / exchangeRate;
+  const expectedValuePerHour = estimateExpectedValuePerHour(estimatedPayback, settings);
   const effectiveHours = Math.max(0, remainingHours - settings.estimatedLossMinutes / 60);
   const expectedValue = expectedValuePerHour * effectiveHours;
 

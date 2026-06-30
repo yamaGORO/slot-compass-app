@@ -1,6 +1,6 @@
 import type { AppSettings } from '@/types';
 
-export const PLACEHOLDER_CALCULATION_MODEL = 'placeholder-v1';
+export const PLACEHOLDER_CALCULATION_MODEL = 'placeholder-v2';
 
 export const PLACEHOLDER_PRIOR_DISTRIBUTIONS: Record<
   AppSettings['priorDistribution'],

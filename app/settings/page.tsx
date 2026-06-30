@@ -94,7 +94,7 @@ export default function SettingsPage() {
           <RetroDataRow label="貸しメダル" description="1枚あたりの金額（円）">
             <NumberSetting value={settings.medalRate} onChange={(v) => update('medalRate', v)} min={1} max={50} label="貸しメダル" />
           </RetroDataRow>
-          <RetroDataRow label="交換率" description="メダル何枚で1円に交換できるか">
+          <RetroDataRow label="交換率" description="100円あたりの交換枚数。5.5枚交換なら5.5">
             <NumberSetting value={settings.exchangeRate} onChange={(v) => update('exchangeRate', v)} min={1} max={10} step={0.1} label="交換率" />
           </RetroDataRow>
           <RetroDataRow label="持ちメダル優先" description="持ちメダルがある場合に優先使用">
