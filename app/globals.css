@@ -8,22 +8,22 @@
   --font-sans: var(--font-noto-jp), var(--font-geist-sans), 'Helvetica Neue', sans-serif;
   --font-mono: var(--font-geist-mono), 'Geist Mono Fallback', monospace;
 
-  /* Gold palette */
-  --color-gold-100: #fdf3d0;
-  --color-gold-200: #f8e08a;
-  --color-gold-300: #e8c64a;
-  --color-gold-400: #d4a017;
-  --color-gold-500: #c9962a;
-  --color-gold-600: #b8860b;
-  --color-gold-700: #9a6f08;
-  --color-gold-800: #7a5606;
-  --color-gold-900: #4a3304;
+  /* Retro report palette */
+  --color-gold-100: #f4f7ff;
+  --color-gold-200: #dce9ff;
+  --color-gold-300: #a9c7ff;
+  --color-gold-400: #79a2ff;
+  --color-gold-500: #f7fbff;
+  --color-gold-600: #a9b3ce;
+  --color-gold-700: #687390;
+  --color-gold-800: #111b60;
+  --color-gold-900: #020824;
 
   /* App surfaces */
-  --color-surface-base: #080808;
-  --color-surface-card: #111111;
-  --color-surface-elevated: #1a1a1a;
-  --color-surface-input: #1e1e1e;
+  --color-surface-base: #020413;
+  --color-surface-card: #06176e;
+  --color-surface-elevated: #09218a;
+  --color-surface-input: #07145f;
   --color-surface-white: #ffffff;
 
   /* Semantic */
@@ -32,14 +32,14 @@
   --color-card: var(--color-surface-card);
   --color-card-foreground: #f0f0f0;
   --color-primary: var(--color-gold-500);
-  --color-primary-foreground: #080808;
+  --color-primary-foreground: #031052;
   --color-secondary: var(--color-surface-elevated);
   --color-secondary-foreground: #f0f0f0;
   --color-muted: #222222;
   --color-muted-foreground: #888888;
   --color-border: rgba(255, 255, 255, 0.08);
   --color-input: var(--color-surface-input);
-  --color-ring: var(--color-gold-500);
+  --color-ring: #f7fbff;
   --color-accent: var(--color-gold-500);
   --color-accent-foreground: #080808;
   --color-destructive: #e05252;
@@ -72,26 +72,26 @@
 
 :root {
   color-scheme: dark;
-  --background: #080808;
-  --foreground: #f0f0f0;
-  --card: #111111;
+  --background: #020413;
+  --foreground: #f7fbff;
+  --card: #06176e;
   --card-foreground: #f0f0f0;
   --popover: #1a1a1a;
   --popover-foreground: #f0f0f0;
-  --primary: #c9962a;
-  --primary-foreground: #080808;
-  --secondary: #1a1a1a;
+  --primary: #f7fbff;
+  --primary-foreground: #031052;
+  --secondary: #09218a;
   --secondary-foreground: #f0f0f0;
   --muted: #222222;
   --muted-foreground: #888888;
-  --accent: #c9962a;
-  --accent-foreground: #080808;
+  --accent: #f7fbff;
+  --accent-foreground: #031052;
   --destructive: #e05252;
   --border: rgba(255,255,255,0.08);
-  --input: #1e1e1e;
-  --ring: #c9962a;
-  --chart-1: #c9962a;
-  --chart-2: #e8c64a;
+  --input: #07145f;
+  --ring: #f7fbff;
+  --chart-1: #f7fbff;
+  --chart-2: #9ec4ff;
   --chart-3: #888;
   --chart-4: #555;
   --chart-5: #333;
@@ -114,6 +114,8 @@
     @apply bg-background text-foreground font-sans antialiased;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background:
+      linear-gradient(180deg, #020413 0%, #071147 42%, #020413 100%);
   }
   html {
     @apply bg-background;
@@ -153,4 +155,201 @@
 /* Tab safe area padding */
 .safe-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Retro report UI ---------------------------------------------------------- */
+:root {
+  --retro-bg: #020413;
+  --retro-blue: #061b82;
+  --retro-blue-dark: #030c4b;
+  --retro-blue-soft: #0b2aa3;
+  --retro-white: #f8fbff;
+  --retro-silver: #aab4cd;
+  --retro-shadow: #020729;
+  --retro-ink: #dbe8ff;
+  --retro-muted: #9fb0dd;
+  --retro-cyan: #91dcff;
+  --retro-yellow: #ffe17b;
+  --retro-red: #ff8c8c;
+}
+
+.retro-screen {
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, #020413 0%, #07104c 46%, #020413 100%);
+  color: var(--retro-white);
+  font-family: var(--font-geist-mono), var(--font-noto-jp), monospace;
+  letter-spacing: 0;
+}
+
+.retro-text {
+  text-shadow: 2px 2px 0 #00073b;
+  font-variant-numeric: tabular-nums;
+}
+
+.retro-frame {
+  position: relative;
+  border: 2px solid var(--retro-white);
+  border-radius: 3px;
+  background: var(--retro-blue);
+  box-shadow:
+    inset 0 0 0 2px var(--retro-silver),
+    inset 0 0 0 5px var(--retro-blue-dark),
+    4px 4px 0 var(--retro-shadow);
+}
+
+.retro-frame::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  pointer-events: none;
+  border: 1px solid rgba(248, 251, 255, 0.6);
+}
+
+.retro-frame-compact::before {
+  inset: 4px;
+}
+
+.retro-panel-body {
+  position: relative;
+  padding: 16px;
+}
+
+.retro-title {
+  color: var(--retro-white);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  text-shadow: 2px 2px 0 #00073b;
+}
+
+.retro-label {
+  color: var(--retro-muted);
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.35;
+  text-shadow: 1px 1px 0 #00073b;
+}
+
+.retro-value {
+  color: var(--retro-white);
+  font-weight: 900;
+  text-shadow: 2px 2px 0 #00073b;
+  font-variant-numeric: tabular-nums;
+}
+
+.retro-row {
+  display: grid;
+  grid-template-columns: minmax(96px, 1fr) minmax(0, 58%);
+  gap: 10px;
+  align-items: center;
+  min-height: 38px;
+  border-bottom: 1px solid rgba(248, 251, 255, 0.22);
+}
+
+.retro-row:last-child {
+  border-bottom: 0;
+}
+
+.retro-input-shell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  min-height: 28px;
+  padding: 3px 7px;
+  border: 2px solid var(--retro-white);
+  background: var(--retro-blue-dark);
+  box-shadow:
+    inset 2px 2px 0 #010522,
+    inset -2px -2px 0 #6e7da8;
+}
+
+.retro-input,
+.retro-select {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  color: var(--retro-white);
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font-family: var(--font-geist-mono), var(--font-noto-jp), monospace;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.2;
+  text-align: right;
+  text-shadow: 2px 2px 0 #00073b;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.retro-input::placeholder {
+  color: rgba(248, 251, 255, 0.38);
+}
+
+.retro-select option {
+  color: #f8fbff;
+  background: #061b82;
+}
+
+.retro-command {
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 2px solid var(--retro-white);
+  border-radius: 2px;
+  background: var(--retro-blue);
+  color: var(--retro-white);
+  box-shadow:
+    inset 0 0 0 2px var(--retro-silver),
+    3px 3px 0 var(--retro-shadow);
+  font-family: var(--font-geist-mono), var(--font-noto-jp), monospace;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 2px 2px 0 #00073b;
+}
+
+.retro-command:active {
+  transform: translate(2px, 2px);
+  box-shadow:
+    inset 0 0 0 2px var(--retro-silver),
+    1px 1px 0 var(--retro-shadow);
+}
+
+.retro-command:disabled {
+  opacity: 0.45;
+}
+
+.retro-message {
+  border: 2px solid var(--retro-white);
+  border-radius: 3px;
+  background: var(--retro-blue-dark);
+  box-shadow:
+    inset 0 0 0 2px var(--retro-silver),
+    inset 0 0 0 5px #02072d,
+    4px 4px 0 var(--retro-shadow);
+}
+
+.retro-big-number {
+  color: var(--retro-white);
+  font-size: clamp(38px, 12vw, 82px);
+  font-weight: 950;
+  line-height: 0.95;
+  text-shadow: 3px 3px 0 #00073b;
+  font-variant-numeric: tabular-nums;
+}
+
+.retro-box-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (min-width: 760px) {
+  .retro-box-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }

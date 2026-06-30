@@ -1,151 +1,40 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { ChevronDown, ChevronRight, RotateCcw } from 'lucide-react';
 import { MACHINES, getMachineById } from '@/data/machines';
 import { calculateExpectedValue } from '@/lib/calculator';
-import { getSettings, saveCurrentResult, addToHistory, setRecentMachineId } from '@/lib/store';
+import { addToHistory, getSettings, saveCurrentResult, setRecentMachineId } from '@/lib/store';
+import {
+  RetroButton,
+  RetroDataRow,
+  RetroInput,
+  RetroMetric,
+  RetroPage,
+  RetroPanel,
+  RetroSelect,
+} from '@/components/ui/Retro';
 import type { CommonInputs, ExtraInputs } from '@/types';
 
-// ─── Input field component ────────────────────────────────────────────────────
-interface FieldProps {
-  icon?: React.ReactNode;
-  label: string;
-  unit: string;
-  value: string;
-  onChange: (v: string) => void;
-  inputMode?: 'numeric' | 'decimal';
-  description?: string;
-  fullWidth?: boolean;
-}
-
-function InputField({ icon, label, unit, value, onChange, inputMode = 'numeric', description }: FieldProps) {
-  return (
-    <div
-      className="flex items-center justify-between px-3 py-2.5 rounded-xl"
-      style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.07)' }}
-    >
-      <div className="flex items-start gap-1.5 min-w-0 flex-1">
-        {icon && <span className="flex-shrink-0 text-[#c9962a] mt-0.5">{icon}</span>}
-        <div className="min-w-0">
-          <p className="text-[10px] font-medium text-[#444444] leading-tight break-keep">{label}</p>
-          {description && <p className="text-[9px] text-[#aaaaaa] leading-tight mt-0.5">{description}</p>}
-        </div>
-      </div>
-      <div className="flex items-center gap-1 flex-shrink-0 ml-1.5">
-        <input
-          type="text"
-          inputMode={inputMode}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder="—"
-          className="w-14 text-right text-sm font-bold text-[#111111] bg-transparent outline-none"
-          style={{ fontFeatureSettings: '"tnum"' }}
-          aria-label={label}
-        />
-        <span className="text-[10px] text-[#999999] w-4 text-left">{unit}</span>
-      </div>
-    </div>
-  );
-}
-
-interface SelectFieldProps {
-  label: string;
-  unit: string;
-  value: string;
-  options: string[];
-  onChange: (v: string) => void;
-  description?: string;
-}
-
-function SelectField({ label, unit, value, options, onChange, description }: SelectFieldProps) {
-  return (
-    <div
-      className="flex items-center justify-between px-3 py-2.5 rounded-xl"
-      style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.07)' }}
-    >
-      <div className="flex items-start gap-1.5 min-w-0 flex-1">
-        <div className="min-w-0">
-          <p className="text-[10px] font-medium text-[#444444] leading-tight break-keep">{label}</p>
-          {description && <p className="text-[9px] text-[#aaaaaa] leading-tight mt-0.5">{description}</p>}
-        </div>
-      </div>
-      <div className="relative flex items-center gap-1 flex-shrink-0 ml-1.5 min-w-0 max-w-[58%]">
-        <select
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="appearance-none w-full min-w-0 pr-5 text-right text-xs font-bold text-[#111111] bg-transparent outline-none truncate"
-          aria-label={label}
-        >
-          {options.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-        <ChevronDown
-          size={11}
-          className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none"
-          color="#999999"
-        />
-        {unit && <span className="text-[10px] text-[#999999] w-4 text-left">{unit}</span>}
-      </div>
-    </div>
-  );
-}
-
-// ─── Time input ───────────────────────────────────────────────────────────────
-interface TimeFieldProps {
+function TimeField({
+  hours,
+  minutes,
+  onHoursChange,
+  onMinutesChange,
+}: {
   hours: string;
   minutes: string;
-  onHoursChange: (v: string) => void;
-  onMinutesChange: (v: string) => void;
-}
-
-function TimeField({ hours, minutes, onHoursChange, onMinutesChange }: TimeFieldProps) {
+  onHoursChange: (value: string) => void;
+  onMinutesChange: (value: string) => void;
+}) {
   return (
-    <div
-      className="flex items-center justify-between px-3.5 py-3 rounded-xl"
-      style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.07)' }}
-    >
-      <div className="flex items-center gap-2">
-        <span className="text-[#c9962a] flex-shrink-0">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-          </svg>
-        </span>
-        <p className="text-[11px] font-medium text-[#444444]">残り時間（任意）</p>
-      </div>
-      <div className="flex items-center gap-1 flex-shrink-0">
-        <input
-          type="text"
-          inputMode="numeric"
-          value={hours}
-          onChange={(e) => onHoursChange(e.target.value)}
-          placeholder=""
-          className="w-9 text-right text-sm font-bold text-[#111111] bg-transparent outline-none"
-          style={{ fontFeatureSettings: '"tnum"' }}
-          aria-label="残り時間（時間）"
-        />
-        <span className="text-[11px] text-[#999999]">時間</span>
-        <input
-          type="text"
-          inputMode="numeric"
-          value={minutes}
-          onChange={(e) => onMinutesChange(e.target.value)}
-          placeholder=""
-          className="w-8 text-right text-sm font-bold text-[#111111] bg-transparent outline-none"
-          style={{ fontFeatureSettings: '"tnum"' }}
-          aria-label="残り時間（分）"
-        />
-        <span className="text-[11px] text-[#999999]">分</span>
-      </div>
+    <div className="grid grid-cols-2 gap-2">
+      <RetroInput value={hours} onChange={onHoursChange} unit="時" ariaLabel="残り時間（時間）" inputMode="numeric" />
+      <RetroInput value={minutes} onChange={onMinutesChange} unit="分" ariaLabel="残り時間（分）" inputMode="numeric" />
     </div>
   );
 }
 
-// ─── Page content ─────────────────────────────────────────────────────────────
 function CalculationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -166,19 +55,19 @@ function CalculationContent() {
   const machine = getMachineById(selectedMachineId);
 
   useEffect(() => {
-    const s = getSettings();
+    const settings = getSettings();
     setInputs((prev) => ({
       ...prev,
-      remainingHours: s.defaultRemainingHours > 0 ? String(s.defaultRemainingHours) : '',
+      remainingHours: settings.defaultRemainingHours > 0 ? String(settings.defaultRemainingHours) : '',
       remainingMinutes: '',
     }));
   }, []);
 
-  const setCommon = (key: keyof CommonInputs) => (val: string) =>
-    setInputs((p) => ({ ...p, [key]: val }));
+  const setCommon = (key: keyof CommonInputs) => (value: string) =>
+    setInputs((prev) => ({ ...prev, [key]: value }));
 
-  const setExtra = (key: string) => (val: string) =>
-    setExtraInputs((p) => ({ ...p, [key]: val }));
+  const setExtra = (key: string) => (value: string) =>
+    setExtraInputs((prev) => ({ ...prev, [key]: value }));
 
   const getNormalizedExtraInputs = () => {
     if (!machine) return extraInputs;
@@ -193,7 +82,14 @@ function CalculationContent() {
   };
 
   const handleReset = () => {
-    setInputs({ totalGames: '', currentGames: '', bbCount: '', rbCount: '', remainingHours: '', remainingMinutes: '' });
+    setInputs({
+      totalGames: '',
+      currentGames: '',
+      bbCount: '',
+      rbCount: '',
+      remainingHours: '',
+      remainingMinutes: '',
+    });
     setExtraInputs({});
   };
 
@@ -209,262 +105,153 @@ function CalculationContent() {
     setTimeout(() => {
       setIsCalculating(false);
       router.push('/result');
-    }, 300);
+    }, 250);
   };
 
-  // Completeness check
   const hasMinimumData = Boolean(
     selectedMachineId &&
     inputs.totalGames &&
     Number(inputs.totalGames) > 0,
   );
 
+  const bonusCount = Number(inputs.bbCount) + Number(inputs.rbCount);
+  const bonusRatio =
+    inputs.totalGames && bonusCount > 0
+      ? `1/${(Number(inputs.totalGames) / bonusCount).toFixed(1)}`
+      : '--';
+
+  const message = !machine
+    ? '機種を選択すると、必要な入力項目が表示されます。'
+    : !hasMinimumData
+      ? '総回転数を入力すると、期待値報告書を作成できます。'
+      : machine.extraFields.length > 0
+        ? '追加データを入力すると、設定推測精度が上がります。'
+        : '入力内容を確認して、期待値報告書を作成してください。';
+
   return (
-    <div className="min-h-screen" style={{ background: '#080808' }}>
-      {/* Header */}
-      <div
-        className="sticky top-0 z-10 flex items-center justify-between px-5 py-4"
-        style={{ background: 'rgba(8,8,8,0.95)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-      >
-        <h1 className="text-base font-bold text-white">データを入力</h1>
-        {machine && (
-          <button
-            type="button"
-            onClick={handleReset}
-            className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white/70 transition-colors"
-          >
-            <RotateCcw size={13} />
-            リセット
-          </button>
-        )}
-      </div>
+    <RetroPage
+      reportTitle="データ入力"
+      commands={[
+        { href: '/history', label: '履歴' },
+        { href: '/settings', label: '設定' },
+      ]}
+      message={message}
+    >
+      <div className="grid gap-3 lg:grid-cols-[1.05fr_0.95fr]">
+        <RetroPanel title="機種選択">
+          <RetroDataRow label="対象機種" description="Excel正本の20機種を単一リストで表示">
+            <RetroSelect
+              value={selectedMachineId}
+              onChange={(value) => {
+                setSelectedMachineId(value);
+                setExtraInputs({});
+              }}
+              ariaLabel="機種を選択"
+              options={[
+                { value: '', label: '機種を選択' },
+                ...MACHINES.map((m) => ({ value: m.id, label: m.name })),
+              ]}
+            />
+          </RetroDataRow>
 
-      <div className="px-4 pb-8 space-y-4">
-
-        {/* Main input card */}
-        <div
-          className="rounded-2xl overflow-hidden mt-3"
-          style={{ background: '#111111', border: '1px solid rgba(255,255,255,0.08)' }}
-        >
-          {/* Card header with icon + machine selector */}
-          <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-            <div className="flex items-center gap-2">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9962a" strokeWidth="1.5">
-                <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>
-              </svg>
-              <span className="text-xs font-semibold text-white/70">データを入力</span>
-            </div>
-            {/* Machine selector — compact */}
-            <div className="relative flex items-center gap-1.5">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#c9962a" strokeWidth="1.5">
-                <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
-              </svg>
-              <select
-                value={selectedMachineId}
-                onChange={(e) => {
-                  setSelectedMachineId(e.target.value);
-                  setExtraInputs({});
-                }}
-                className="appearance-none h-8 pl-1 pr-6 rounded-lg text-xs font-semibold cursor-pointer"
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: selectedMachineId ? '#c9962a' : '#888888',
-                  maxWidth: '130px',
-                }}
-                aria-label="機種を選択"
-              >
-                <option value="" disabled>機種を選択</option>
-                {MACHINES.map((m) => (
-                  <option key={m.id} value={m.id} style={{ background: '#1a1a1a' }}>
-                    {m.name}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown
-                size={11}
-                className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none"
-                color="#c9962a"
-              />
-            </div>
-          </div>
-
-          {/* Input form — only shown after machine selection */}
           {machine ? (
-            <div className="p-3 space-y-2">
-              {/* Common fields grid */}
-              <div className="grid grid-cols-2 gap-2">
-                <InputField
-                  label="総回転数"
-                  unit="G"
-                  value={inputs.totalGames}
-                  onChange={setCommon('totalGames')}
-                  icon={
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
-                      <path d="M21 3v5h-5"/>
-                    </svg>
-                  }
-                />
-                <InputField
-                  label="現在の回転数"
-                  unit="G"
-                  value={inputs.currentGames}
-                  onChange={setCommon('currentGames')}
-                  icon={
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
-                      <path d="M21 3v5h-5"/>
-                    </svg>
-                  }
-                />
-                <InputField
-                  label="BB回数"
-                  unit="回"
-                  value={inputs.bbCount}
-                  onChange={setCommon('bbCount')}
-                  icon={
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <rect x="2" y="2" width="20" height="20" rx="2"/><path d="M8 12h8M12 8v8"/>
-                    </svg>
-                  }
-                />
-                <InputField
-                  label="RB回数"
-                  unit="回"
-                  value={inputs.rbCount}
-                  onChange={setCommon('rbCount')}
-                  icon={
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <rect x="2" y="2" width="20" height="20" rx="2"/><path d="M8 12h8"/>
-                    </svg>
-                  }
-                />
-              </div>
-
-              {/* Bonus ratio — full width display row */}
-              {inputs.totalGames && (Number(inputs.bbCount) + Number(inputs.rbCount)) > 0 && (
-                <div
-                  className="flex items-center justify-between px-3.5 py-2.5 rounded-xl"
-                  style={{ background: 'rgba(201,150,42,0.07)', border: '1px solid rgba(201,150,42,0.15)' }}
-                >
-                  <div className="flex items-center gap-2 text-xs text-[#c9962a]">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                    </svg>
-                    <span className="text-[11px]">ボーナス合算</span>
-                  </div>
-                  <span className="text-sm font-bold text-[#c9962a]" style={{ fontFeatureSettings: '"tnum"' }}>
-                    1/{(Number(inputs.totalGames) / (Number(inputs.bbCount) + Number(inputs.rbCount))).toFixed(1)}
-                  </span>
-                </div>
-              )}
-
-              {/* Remaining time — full width */}
-              <TimeField
-                hours={inputs.remainingHours}
-                minutes={inputs.remainingMinutes}
-                onHoursChange={setCommon('remainingHours')}
-                onMinutesChange={setCommon('remainingMinutes')}
-              />
+            <div className="retro-box-grid mt-4">
+              <RetroMetric label="メーカー" value={machine.maker} />
+              <RetroMetric label="分類" value={machine.category} />
+              <RetroMetric label="専用項目" value={`${machine.extraFields.length}`} unit="件" />
+              <RetroMetric label="合算" value={bonusRatio} />
             </div>
           ) : (
-            /* Empty state when no machine selected */
-            <div className="flex flex-col items-center justify-center py-12 gap-3">
-              <div
-                className="w-12 h-12 rounded-full flex items-center justify-center"
-                style={{ background: 'rgba(201,150,42,0.08)', border: '1px solid rgba(201,150,42,0.15)' }}
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c9962a" strokeWidth="1.5">
-                  <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
-                </svg>
-              </div>
-              <div className="text-center px-4">
-                <p className="text-xs font-semibold text-white/50">機種を選択してください</p>
-                <p className="text-[10px] text-white/25 mt-1">右上のプルダウンから機種を選ぶと<br />入力フォームが表示されます</p>
-              </div>
+            <div className="py-8 text-center">
+              <p className="retro-value text-xl">NO MACHINE</p>
+              <p className="retro-label mt-3">機種未選択のため入力欄は待機中です。</p>
             </div>
           )}
-        </div>
+        </RetroPanel>
 
-        {/* Machine-specific fields card */}
-        {machine && machine.extraFields.length > 0 && (
-          <div
-            className="rounded-2xl overflow-hidden"
-            style={{ background: '#111111', border: '1px solid rgba(255,255,255,0.08)' }}
-          >
-            <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-              <div className="w-1 h-4 rounded-full" style={{ background: '#888888' }} />
-              <span className="text-xs font-semibold text-white/50 tracking-wide">
-                {machine.name} 専用データ
-              </span>
-            </div>
-            <div className="p-3 space-y-2">
-              {machine.extraFields.map((field) =>
-                field.type === 'select' ? (
-                  <SelectField
-                    key={field.key}
-                    label={field.label}
-                    unit={field.unit}
-                    value={extraInputs[field.key] || field.options?.[0] || ''}
-                    options={field.options ?? []}
-                    onChange={setExtra(field.key)}
-                    description={field.description}
-                  />
-                ) : (
-                  <InputField
-                    key={field.key}
-                    label={field.label}
-                    unit={field.unit}
-                    value={extraInputs[field.key] ?? ''}
-                    onChange={setExtra(field.key)}
-                    description={field.description}
-                    inputMode="numeric"
-                  />
-                ),
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Calculate button */}
         {machine && (
-          <button
-            type="button"
-            onClick={handleCalculate}
-            disabled={!hasMinimumData || isCalculating}
-            className="w-full h-14 rounded-2xl flex items-center justify-between px-6 font-bold text-base transition-all active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
-            style={{
-              background: hasMinimumData
-                ? 'linear-gradient(90deg, #b8860b 0%, #d4a017 45%, #c9962a 100%)'
-                : '#1e1e1e',
-              color: hasMinimumData ? '#080808' : '#444',
-              boxShadow: hasMinimumData ? '0 4px 24px rgba(201,150,42,0.4)' : 'none',
-              border: hasMinimumData ? 'none' : '1px solid rgba(255,255,255,0.06)',
-            }}
-          >
-            <div className="flex items-center gap-2.5">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={hasMinimumData ? 2.5 : 1.5}>
-                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-              </svg>
-              <span>{isCalculating ? '計算中...' : '期待値を計算する'}</span>
+          <RetroPanel title="実戦データ入力">
+            <div className="space-y-0">
+              <RetroDataRow label="総回転数">
+                <RetroInput value={inputs.totalGames} onChange={setCommon('totalGames')} unit="G" ariaLabel="総回転数" inputMode="numeric" />
+              </RetroDataRow>
+              <RetroDataRow label="現在の回転数">
+                <RetroInput value={inputs.currentGames} onChange={setCommon('currentGames')} unit="G" ariaLabel="現在の回転数" inputMode="numeric" />
+              </RetroDataRow>
+              <RetroDataRow label="BB回数">
+                <RetroInput value={inputs.bbCount} onChange={setCommon('bbCount')} unit="回" ariaLabel="BB回数" inputMode="numeric" />
+              </RetroDataRow>
+              <RetroDataRow label="RB回数">
+                <RetroInput value={inputs.rbCount} onChange={setCommon('rbCount')} unit="回" ariaLabel="RB回数" inputMode="numeric" />
+              </RetroDataRow>
+              <RetroDataRow label="残り時間">
+                <TimeField
+                  hours={inputs.remainingHours}
+                  minutes={inputs.remainingMinutes}
+                  onHoursChange={setCommon('remainingHours')}
+                  onMinutesChange={setCommon('remainingMinutes')}
+                />
+              </RetroDataRow>
             </div>
-            <div
-              className="w-8 h-8 rounded-full flex items-center justify-center"
-              style={{ background: hasMinimumData ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.05)' }}
-            >
-              <ChevronRight size={16} />
-            </div>
-          </button>
+          </RetroPanel>
         )}
       </div>
-    </div>
+
+      {machine && machine.extraFields.length > 0 && (
+        <RetroPanel title={`${machine.name} 専用データ`}>
+          <div className="grid gap-x-5 lg:grid-cols-2">
+            {machine.extraFields.map((field) => (
+              <RetroDataRow key={field.key} label={field.label} description={field.description}>
+                {field.type === 'select' ? (
+                  <RetroSelect
+                    value={extraInputs[field.key] || field.options?.[0] || ''}
+                    onChange={setExtra(field.key)}
+                    ariaLabel={field.label}
+                    options={(field.options ?? []).map((option) => ({ value: option, label: option }))}
+                  />
+                ) : (
+                  <RetroInput
+                    value={extraInputs[field.key] ?? ''}
+                    onChange={setExtra(field.key)}
+                    unit={field.unit}
+                    ariaLabel={field.label}
+                    inputMode="numeric"
+                  />
+                )}
+              </RetroDataRow>
+            ))}
+          </div>
+        </RetroPanel>
+      )}
+
+      {machine && (
+        <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
+          <RetroPanel title="入力状態">
+            <div className="retro-box-grid">
+              <RetroMetric label="共通項目" value="5" unit="件" />
+              <RetroMetric label="専用項目" value={`${machine.extraFields.length}`} unit="件" />
+              <RetroMetric label="データ状態" value={hasMinimumData ? 'READY' : 'WAIT'} tone={hasMinimumData ? 'accent' : 'normal'} />
+              <RetroMetric label="検証" value="仮計算" />
+            </div>
+          </RetroPanel>
+
+          <div className="flex gap-2 sm:flex-col">
+            <RetroButton onClick={handleReset} className="flex-1 sm:w-36">
+              リセット
+            </RetroButton>
+            <RetroButton onClick={handleCalculate} disabled={!hasMinimumData || isCalculating} className="flex-1 sm:w-36">
+              {isCalculating ? '計算中' : '報告書作成'}
+            </RetroButton>
+          </div>
+        </div>
+      )}
+    </RetroPage>
   );
 }
 
 export default function CalculationPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#080808]" />}>
+    <Suspense fallback={<div className="min-h-screen bg-[#020413]" />}>
       <CalculationContent />
     </Suspense>
   );

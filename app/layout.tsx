@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: 'dark',
-  themeColor: '#080808',
+  themeColor: '#020413',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -59,12 +59,11 @@ export default function RootLayout({
   return (
     <html
       lang="ja"
-      className={`${geistSans.variable} ${geistMono.variable} ${notoSansJP.variable} bg-[#080808]`}
+      className={`${geistSans.variable} ${geistMono.variable} ${notoSansJP.variable} bg-[#020413]`}
     >
-      <body className="font-sans antialiased bg-[#080808] text-white min-h-screen">
+      <body className="font-sans antialiased bg-[#020413] text-white min-h-screen">
         <AccessGate>
-          {/* Max-width container centered for larger screens, full-width for mobile */}
-          <div className="mx-auto max-w-[430px] relative min-h-screen">
+          <div className="mx-auto max-w-[960px] relative min-h-screen">
             <main className="pb-20">
               {children}
             </main>
