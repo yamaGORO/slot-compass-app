@@ -12,12 +12,36 @@ const TABS = [
   { href: '/settings', label: '設定・情報', icon: Settings },
 ];
 
+function normalizePathname(pathname: string) {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+  const withoutBasePath =
+    basePath && pathname.startsWith(basePath)
+      ? pathname.slice(basePath.length) || '/'
+      : pathname;
+
+  return withoutBasePath.length > 1 && withoutBasePath.endsWith('/')
+    ? withoutBasePath.slice(0, -1)
+    : withoutBasePath;
+}
+
+function isPathMatch(pathname: string, href: string) {
+  if (href === '/') return pathname === '/';
+  return pathname === href || pathname.endsWith(href);
+}
+
 export default function BottomNav() {
   const pathname = usePathname();
+  const normalizedPathname = normalizePathname(pathname);
 
   // Map result page to calculation tab for nav highlighting
-  const activePathname = pathname === '/result' ? '/calculation' : pathname;
+  const activePathname = isPathMatch(normalizedPathname, '/result') ? '/calculation' : normalizedPathname;
   const requestCalculation = () => {
+    const form = document.getElementById('slot-compass-calculation-form') as HTMLFormElement | null;
+    if (form?.requestSubmit) {
+      form.requestSubmit();
+      return;
+    }
+
     window.dispatchEvent(new CustomEvent('slot-compass:calculate'));
   };
 
@@ -35,7 +59,7 @@ export default function BottomNav() {
           <div className="flex items-end justify-around h-16 px-1">
             {TABS.map((tab) => {
               const Icon = tab.icon;
-              const isActive = activePathname === tab.href;
+              const isActive = isPathMatch(activePathname, tab.href);
 
               if (tab.primary) {
                 const primaryClassName =
@@ -56,7 +80,7 @@ export default function BottomNav() {
                   </>
                 );
 
-                if (pathname === '/calculation') {
+                if (isPathMatch(normalizedPathname, '/calculation')) {
                   return (
                     <button
                       key={tab.href}

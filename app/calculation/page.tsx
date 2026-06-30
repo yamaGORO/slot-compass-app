@@ -142,114 +142,123 @@ function CalculationContent() {
       ]}
       message={message}
     >
-      <div className="grid gap-3 lg:grid-cols-[1.05fr_0.95fr]">
-        <RetroPanel title="機種選択">
-          <RetroDataRow label="対象機種" description="Excel正本の20機種を単一リストで表示">
-            <RetroSelect
-              value={selectedMachineId}
-              onChange={(value) => {
-                setSelectedMachineId(value);
-                setExtraInputs({});
-              }}
-              ariaLabel="機種を選択"
-              options={[
-                { value: '', label: '機種を選択' },
-                ...MACHINES.map((m) => ({ value: m.id, label: m.name })),
-              ]}
-            />
-          </RetroDataRow>
+      <form
+        id="slot-compass-calculation-form"
+        className="space-y-3"
+        onSubmit={(event) => {
+          event.preventDefault();
+          handleCalculate();
+        }}
+      >
+        <div className="grid gap-3 lg:grid-cols-[1.05fr_0.95fr]">
+          <RetroPanel title="機種選択">
+            <RetroDataRow label="対象機種" description="Excel正本の20機種を単一リストで表示">
+              <RetroSelect
+                value={selectedMachineId}
+                onChange={(value) => {
+                  setSelectedMachineId(value);
+                  setExtraInputs({});
+                }}
+                ariaLabel="機種を選択"
+                options={[
+                  { value: '', label: '機種を選択' },
+                  ...MACHINES.map((m) => ({ value: m.id, label: m.name })),
+                ]}
+              />
+            </RetroDataRow>
 
-          {machine ? (
-            <div className="retro-box-grid mt-4">
-              <RetroMetric label="メーカー" value={machine.maker} />
-              <RetroMetric label="分類" value={machine.category} />
-              <RetroMetric label="専用項目" value={`${machine.extraFields.length}`} unit="件" />
-              <RetroMetric label="合算" value={bonusRatio} />
-            </div>
-          ) : (
-            <div className="py-8 text-center">
-              <p className="retro-value text-xl">NO MACHINE</p>
-              <p className="retro-label mt-3">機種未選択のため入力欄は待機中です。</p>
-            </div>
+            {machine ? (
+              <div className="retro-box-grid mt-4">
+                <RetroMetric label="メーカー" value={machine.maker} />
+                <RetroMetric label="分類" value={machine.category} />
+                <RetroMetric label="専用項目" value={`${machine.extraFields.length}`} unit="件" />
+                <RetroMetric label="合算" value={bonusRatio} />
+              </div>
+            ) : (
+              <div className="py-8 text-center">
+                <p className="retro-value text-xl">NO MACHINE</p>
+                <p className="retro-label mt-3">機種未選択のため入力欄は待機中です。</p>
+              </div>
+            )}
+          </RetroPanel>
+
+          {machine && (
+            <RetroPanel title="実戦データ入力">
+              <div className="space-y-0">
+                <RetroDataRow label="総回転数">
+                  <RetroInput value={inputs.totalGames} onChange={setCommon('totalGames')} unit="G" ariaLabel="総回転数" inputMode="numeric" />
+                </RetroDataRow>
+                <RetroDataRow label="現在の回転数">
+                  <RetroInput value={inputs.currentGames} onChange={setCommon('currentGames')} unit="G" ariaLabel="現在の回転数" inputMode="numeric" />
+                </RetroDataRow>
+                <RetroDataRow label="BB回数">
+                  <RetroInput value={inputs.bbCount} onChange={setCommon('bbCount')} unit="回" ariaLabel="BB回数" inputMode="numeric" />
+                </RetroDataRow>
+                <RetroDataRow label="RB回数">
+                  <RetroInput value={inputs.rbCount} onChange={setCommon('rbCount')} unit="回" ariaLabel="RB回数" inputMode="numeric" />
+                </RetroDataRow>
+                <RetroDataRow label="残り時間">
+                  <TimeField
+                    hours={inputs.remainingHours}
+                    minutes={inputs.remainingMinutes}
+                    onHoursChange={setCommon('remainingHours')}
+                    onMinutesChange={setCommon('remainingMinutes')}
+                  />
+                </RetroDataRow>
+              </div>
+            </RetroPanel>
           )}
-        </RetroPanel>
+        </div>
 
-        {machine && (
-          <RetroPanel title="実戦データ入力">
-            <div className="space-y-0">
-              <RetroDataRow label="総回転数">
-                <RetroInput value={inputs.totalGames} onChange={setCommon('totalGames')} unit="G" ariaLabel="総回転数" inputMode="numeric" />
-              </RetroDataRow>
-              <RetroDataRow label="現在の回転数">
-                <RetroInput value={inputs.currentGames} onChange={setCommon('currentGames')} unit="G" ariaLabel="現在の回転数" inputMode="numeric" />
-              </RetroDataRow>
-              <RetroDataRow label="BB回数">
-                <RetroInput value={inputs.bbCount} onChange={setCommon('bbCount')} unit="回" ariaLabel="BB回数" inputMode="numeric" />
-              </RetroDataRow>
-              <RetroDataRow label="RB回数">
-                <RetroInput value={inputs.rbCount} onChange={setCommon('rbCount')} unit="回" ariaLabel="RB回数" inputMode="numeric" />
-              </RetroDataRow>
-              <RetroDataRow label="残り時間">
-                <TimeField
-                  hours={inputs.remainingHours}
-                  minutes={inputs.remainingMinutes}
-                  onHoursChange={setCommon('remainingHours')}
-                  onMinutesChange={setCommon('remainingMinutes')}
-                />
-              </RetroDataRow>
+        {machine && machine.extraFields.length > 0 && (
+          <RetroPanel title={`${machine.name} 専用データ`}>
+            <div className="grid gap-x-5 lg:grid-cols-2">
+              {machine.extraFields.map((field) => (
+                <RetroDataRow key={field.key} label={field.label} description={field.description}>
+                  {field.type === 'select' ? (
+                    <RetroSelect
+                      value={extraInputs[field.key] || field.options?.[0] || ''}
+                      onChange={setExtra(field.key)}
+                      ariaLabel={field.label}
+                      options={(field.options ?? []).map((option) => ({ value: option, label: option }))}
+                    />
+                  ) : (
+                    <RetroInput
+                      value={extraInputs[field.key] ?? ''}
+                      onChange={setExtra(field.key)}
+                      unit={field.unit}
+                      ariaLabel={field.label}
+                      inputMode="numeric"
+                    />
+                  )}
+                </RetroDataRow>
+              ))}
             </div>
           </RetroPanel>
         )}
-      </div>
 
-      {machine && machine.extraFields.length > 0 && (
-        <RetroPanel title={`${machine.name} 専用データ`}>
-          <div className="grid gap-x-5 lg:grid-cols-2">
-            {machine.extraFields.map((field) => (
-              <RetroDataRow key={field.key} label={field.label} description={field.description}>
-                {field.type === 'select' ? (
-                  <RetroSelect
-                    value={extraInputs[field.key] || field.options?.[0] || ''}
-                    onChange={setExtra(field.key)}
-                    ariaLabel={field.label}
-                    options={(field.options ?? []).map((option) => ({ value: option, label: option }))}
-                  />
-                ) : (
-                  <RetroInput
-                    value={extraInputs[field.key] ?? ''}
-                    onChange={setExtra(field.key)}
-                    unit={field.unit}
-                    ariaLabel={field.label}
-                    inputMode="numeric"
-                  />
-                )}
-              </RetroDataRow>
-            ))}
-          </div>
-        </RetroPanel>
-      )}
+        {machine && (
+          <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
+            <RetroPanel title="入力状態">
+              <div className="retro-box-grid">
+                <RetroMetric label="共通項目" value="5" unit="件" />
+                <RetroMetric label="専用項目" value={`${machine.extraFields.length}`} unit="件" />
+                <RetroMetric label="データ状態" value={hasMinimumData ? 'READY' : 'WAIT'} tone={hasMinimumData ? 'accent' : 'normal'} />
+                <RetroMetric label="検証" value="仮計算" />
+              </div>
+            </RetroPanel>
 
-      {machine && (
-        <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
-          <RetroPanel title="入力状態">
-            <div className="retro-box-grid">
-              <RetroMetric label="共通項目" value="5" unit="件" />
-              <RetroMetric label="専用項目" value={`${machine.extraFields.length}`} unit="件" />
-              <RetroMetric label="データ状態" value={hasMinimumData ? 'READY' : 'WAIT'} tone={hasMinimumData ? 'accent' : 'normal'} />
-              <RetroMetric label="検証" value="仮計算" />
+            <div className="flex gap-2 sm:flex-col">
+              <RetroButton onClick={handleReset} className="flex-1 sm:w-36">
+                リセット
+              </RetroButton>
+              <RetroButton type="submit" disabled={!hasMinimumData || isCalculating} className="flex-1 sm:w-36">
+                {isCalculating ? '計算中' : '報告書作成'}
+              </RetroButton>
             </div>
-          </RetroPanel>
-
-          <div className="flex gap-2 sm:flex-col">
-            <RetroButton onClick={handleReset} className="flex-1 sm:w-36">
-              リセット
-            </RetroButton>
-            <RetroButton onClick={handleCalculate} disabled={!hasMinimumData || isCalculating} className="flex-1 sm:w-36">
-              {isCalculating ? '計算中' : '報告書作成'}
-            </RetroButton>
           </div>
-        </div>
-      )}
+        )}
+      </form>
     </RetroPage>
   );
 }
