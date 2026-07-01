@@ -55,7 +55,7 @@ export default function AccessGate({ children }: { children: React.ReactNode }) 
   return (
     <div className="retro-screen min-h-screen flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-[520px] space-y-3">
-        <RetroPanel title="SLOT COMPASS / PRIVATE ACCESS">
+        <RetroPanel title="COMPASS / PRIVATE ACCESS">
           <form onSubmit={handleSubmit} className="space-y-4">
             <RetroDataRow label="パスコード" description="知人共有用のアクセスコード">
               <RetroInput
@@ -75,7 +75,7 @@ export default function AccessGate({ children }: { children: React.ReactNode }) 
           </form>
         </RetroPanel>
         <RetroMessage>
-          パスコードを入力すると、期待値報告書システムを起動します。
+          パスコードを入力すると、スロット版とパチンコ版を選択できます。
         </RetroMessage>
       </div>
     </div>

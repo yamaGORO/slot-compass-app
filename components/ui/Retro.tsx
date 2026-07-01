@@ -11,18 +11,27 @@ type RetroCommand = {
 export function RetroPage({
   children,
   reportTitle = '期待値報告書',
+  brandTitle = 'SLOT COMPASS',
+  systemLabel = 'VALUE REPORT SYSTEM',
   commands,
   message,
 }: {
   children: React.ReactNode;
   reportTitle?: string;
+  brandTitle?: string;
+  systemLabel?: string;
   commands?: RetroCommand[];
   message?: React.ReactNode;
 }) {
   return (
     <div className="retro-screen px-3 py-3 sm:px-5 sm:py-5">
       <div className="mx-auto max-w-[960px] space-y-3 pb-24">
-        <RetroHeader reportTitle={reportTitle} commands={commands} />
+        <RetroHeader
+          reportTitle={reportTitle}
+          brandTitle={brandTitle}
+          systemLabel={systemLabel}
+          commands={commands}
+        />
         {children}
         {message && <RetroMessage>{message}</RetroMessage>}
       </div>
@@ -32,17 +41,21 @@ export function RetroPage({
 
 export function RetroHeader({
   reportTitle,
+  brandTitle,
+  systemLabel,
   commands,
 }: {
   reportTitle: string;
+  brandTitle: string;
+  systemLabel: string;
   commands?: RetroCommand[];
 }) {
   return (
     <header className="grid grid-cols-[minmax(0,1fr)_auto] gap-2 items-start">
       <div className="retro-frame retro-frame-compact">
         <div className="retro-panel-body px-3 py-3">
-          <p className="retro-title text-[15px] sm:text-[18px]">SLOT COMPASS</p>
-          <p className="retro-label mt-1">VALUE REPORT SYSTEM</p>
+          <p className="retro-title text-[15px] sm:text-[18px]">{brandTitle}</p>
+          <p className="retro-label mt-1">{systemLabel}</p>
         </div>
       </div>
       <div className="space-y-2 min-w-[132px]">
@@ -198,7 +211,7 @@ export function RetroMetric({
     <div className="retro-frame retro-frame-compact">
       <div className="retro-panel-body px-3 py-3 text-center">
         <p className="retro-label">{label}</p>
-        <p className={cn('retro-value mt-2 text-xl leading-none', color)}>
+        <p className={cn('retro-value mt-2 break-words text-xl leading-tight', color)}>
           {value}
           {unit && <span className="ml-1 text-xs">{unit}</span>}
         </p>

@@ -4,12 +4,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, Clock, Calculator, LayoutGrid, Settings } from 'lucide-react';
 
-const TABS = [
-  { href: '/', label: 'ホーム', icon: Home },
-  { href: '/history', label: '計算履歴', icon: Clock },
-  { href: '/calculation', label: '計算する', icon: Calculator, primary: true },
-  { href: '/machines', label: '機種一覧', icon: LayoutGrid },
-  { href: '/settings', label: '設定・情報', icon: Settings },
+const TAB_DEFS = [
+  { path: '/', label: 'ホーム', icon: Home },
+  { path: '/history', label: '計算履歴', icon: Clock },
+  { path: '/calculation', label: '計算する', icon: Calculator, primary: true },
+  { path: '/machines', label: '機種一覧', icon: LayoutGrid },
+  { path: '/settings', label: '設定・情報', icon: Settings },
 ];
 
 function normalizePathname(pathname: string) {
@@ -32,18 +32,35 @@ function isPathMatch(pathname: string, href: string) {
 export default function BottomNav() {
   const pathname = usePathname();
   const normalizedPathname = normalizePathname(pathname);
+  const isSelector = normalizedPathname === '/';
+
+  if (isSelector) {
+    return null;
+  }
+
+  const isPachinko = normalizedPathname.startsWith('/pachinko');
+  const appPrefix = isPachinko ? '/pachinko' : '/slot';
+  const pathInApp = normalizedPathname.startsWith(appPrefix)
+    ? normalizedPathname.slice(appPrefix.length) || '/'
+    : normalizedPathname;
 
   // Map result page to calculation tab for nav highlighting
-  const activePathname = isPathMatch(normalizedPathname, '/result') ? '/calculation' : normalizedPathname;
+  const activePathname = isPathMatch(pathInApp, '/result') ? '/calculation' : pathInApp;
   const requestCalculation = () => {
-    const form = document.getElementById('slot-compass-calculation-form') as HTMLFormElement | null;
+    const formId = isPachinko ? 'pachinko-compass-calculation-form' : 'slot-compass-calculation-form';
+    const eventName = isPachinko ? 'pachinko-compass:calculate' : 'slot-compass:calculate';
+    const form = document.getElementById(formId) as HTMLFormElement | null;
     if (form?.requestSubmit) {
       form.requestSubmit();
       return;
     }
 
-    window.dispatchEvent(new CustomEvent('slot-compass:calculate'));
+    window.dispatchEvent(new CustomEvent(eventName));
   };
+  const tabs = TAB_DEFS.map((tab) => ({
+    ...tab,
+    href: tab.path === '/' ? appPrefix : `${appPrefix}${tab.path}`,
+  }));
 
   return (
     <nav
@@ -57,9 +74,9 @@ export default function BottomNav() {
       <div className="mx-auto max-w-[960px] px-2 pt-2">
         <div className="retro-frame retro-frame-compact">
           <div className="flex items-end justify-around h-16 px-1">
-            {TABS.map((tab) => {
+            {tabs.map((tab) => {
               const Icon = tab.icon;
-              const isActive = isPathMatch(activePathname, tab.href);
+              const isActive = isPathMatch(activePathname, tab.path);
 
               if (tab.primary) {
                 const primaryClassName =
@@ -80,7 +97,7 @@ export default function BottomNav() {
                   </>
                 );
 
-                if (isPathMatch(normalizedPathname, '/calculation')) {
+                if (isPathMatch(pathInApp, '/calculation')) {
                   return (
                     <button
                       key={tab.href}

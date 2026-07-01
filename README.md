@@ -1,6 +1,18 @@
-# Slot Compass
+# Compass
 
-v0で作成したSlot CompassのUIをベースにした、パチスロ実戦データ用の期待値・予想設定計算アプリです。
+Slot Compass と Pachinko Compass を1つのサイトに統合した、個人用の期待値報告書アプリです。
+
+パスコード入力後に「スロット」「パチンコ」を選択し、選択した方の入力画面・履歴・設定を使用します。
+
+## 画面構成
+
+- `/`: パスコード通過後のスロット / パチンコ選択画面
+- `/slot`: スロット版ホーム
+- `/slot/calculation`: スロット版計算画面
+- `/pachinko`: パチンコ版ホーム
+- `/pachinko/calculation`: パチンコ版計算画面
+
+旧スロットURLの `/calculation`、`/history`、`/machines`、`/settings`、`/result` も互換用に残しています。
 
 ## ローカルで起動する手順
 
@@ -49,16 +61,19 @@ vercel --prod
 3. `out/` の中身を `gh-pages` ブランチへpushします。
 4. GitHubリポジトリの `Settings` → `Pages` で、公開元を `gh-pages` ブランチに設定します。
 
-公開URLは次の形式です。
+公開URLは次です。
 
 ```text
-https://yamaGORO.github.io/slot-compass-app/
+https://yamagoro.github.io/slot-compass-app/
 ```
 
 このURLを知人へ共有すれば、追加コストなしで利用できます。iPhone Safariでは共有ボタンから「ホーム画面に追加」を選ぶと、PWAとして起動できます。
 
 ## 実装メモ
 
+- スロット版とパチンコ版は同じサイト内に統合しています。
+- 履歴・設定・直近結果は `slot-compass:*` と `pachinko-compass:*` のlocalStorageキーで別々に保存します。
+- 共通のパスコード画面を通過後、トップ画面でスロット / パチンコを選択します。
 - 機種選択は計算画面右上のプルダウンに統一しています。
 - Aタイプとスマスロは選択肢上では分けず、20機種を1つのリストとして表示します。
 - 機種を選択するまで数値入力欄は表示しません。
@@ -68,17 +83,38 @@ https://yamaGORO.github.io/slot-compass-app/
 
 ## 計算ロジックと仮データ
 
-計算画面は `lib/calculator.ts` だけを参照します。現在の実体は `lib/calculation/placeholder-engine.ts` に分離してあります。
+スロット版の計算画面は `lib/calculator.ts` だけを参照します。現在の実体は `lib/calculation/placeholder-engine.ts` に分離してあります。
 
 仮の分布・補正値は `data/calculation-placeholder.ts` に分離しています。将来、本計算ロジックや正式な機種スペックへ差し替える場合は、UI側ではなくこの周辺を置き換えてください。
 
 機種マスタの現在データは `data/machines.ts` にあります。参照用に受け取ったSlot Compassデータパッケージ内の機種名・追加入力項目を反映しています。計算値が参照データに含まれていない箇所は、仮データとして明確に分離しています。
+
+パチンコ版の計算・設定・機種マスターは次に分離しています。
+
+- `data/pachinko/machines.ts`
+- `data/pachinko/calculation-placeholder.ts`
+- `lib/pachinko/calculator.ts`
+- `lib/pachinko/calculation/placeholder-engine.ts`
+- `types/pachinko.ts`
 
 ## 変更したファイル一覧
 
 - `README.md`
 - `.gitignore`
 - `app/calculation/page.tsx`
+- `app/page.tsx`
+- `app/slot/page.tsx`
+- `app/slot/calculation/page.tsx`
+- `app/slot/history/page.tsx`
+- `app/slot/machines/page.tsx`
+- `app/slot/result/page.tsx`
+- `app/slot/settings/page.tsx`
+- `app/pachinko/page.tsx`
+- `app/pachinko/calculation/page.tsx`
+- `app/pachinko/history/page.tsx`
+- `app/pachinko/machines/page.tsx`
+- `app/pachinko/result/page.tsx`
+- `app/pachinko/settings/page.tsx`
 - `app/history/page.tsx`
 - `app/layout.tsx`
 - `app/machines/page.tsx`
@@ -88,8 +124,13 @@ https://yamaGORO.github.io/slot-compass-app/
 - `components/layout/AccessGate.tsx`
 - `data/calculation-placeholder.ts`
 - `data/machines.ts`
+- `data/pachinko/calculation-placeholder.ts`
+- `data/pachinko/machines.ts`
 - `lib/calculation/placeholder-engine.ts`
 - `lib/calculator.ts`
+- `lib/pachinko/calculation/placeholder-engine.ts`
+- `lib/pachinko/calculator.ts`
+- `lib/pachinko/store.ts`
 - `next.config.mjs`
 - `next-env.d.ts`
 - `public/apple-touch-icon.png`
@@ -97,3 +138,4 @@ https://yamaGORO.github.io/slot-compass-app/
 - `public/icon-512.png`
 - `public/manifest.webmanifest`
 - `types/index.ts`
+- `types/pachinko.ts`

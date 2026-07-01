@@ -16,13 +16,13 @@ const notoSansJP = Noto_Sans_JP({
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''
 
 export const metadata: Metadata = {
-  title: 'Slot Compass — 期待値ナビゲーター',
-  description: 'パチスロ実戦データから期待値と予想設定を高精度に算出する個人用分析ツール',
+  title: 'Compass — 期待値報告書システム',
+  description: 'スロットとパチンコの実戦データから期待値を算出する個人用分析ツール',
   generator: 'v0.app',
-  applicationName: 'Slot Compass',
+  applicationName: 'Compass',
   manifest: `${basePath}/manifest.webmanifest`,
-  keywords: ['パチスロ', '期待値', '設定推測', 'スマスロ', 'ジャグラー'],
-  authors: [{ name: 'Slot Compass' }],
+  keywords: ['パチスロ', 'パチンコ', '期待値', '設定推測', 'ボーダー'],
+  authors: [{ name: 'Compass' }],
   icons: {
     icon: [
       { url: `${basePath}/icon-dark-32x32.png`, sizes: '32x32', type: 'image/png', media: '(prefers-color-scheme: light)' },
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    title: 'Slot Compass',
+    title: 'Compass',
     statusBarStyle: 'black-translucent',
   },
   formatDetection: {

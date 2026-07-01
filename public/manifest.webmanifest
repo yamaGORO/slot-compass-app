@@ -1,13 +1,13 @@
 {
-  "name": "Slot Compass",
-  "short_name": "Slot Compass",
-  "description": "パチスロ実戦データから期待値と予想設定を算出する個人用分析ツール",
+  "name": "Compass",
+  "short_name": "Compass",
+  "description": "スロットとパチンコの実戦データから期待値を算出する個人用分析ツール",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#080808",
-  "theme_color": "#080808",
+  "background_color": "#020413",
+  "theme_color": "#020413",
   "icons": [
     {
       "src": "icon-192.png",
