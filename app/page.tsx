@@ -8,6 +8,8 @@ import { MACHINES as PACHINKO_MACHINES } from '@/data/pachinko/machines';
 export default function AppSelectorPage() {
   return (
     <RetroPage
+      brandTitle="COMPASS"
+      systemLabel="REPORT SELECT SYSTEM"
       reportTitle="選択画面"
       message="使用する報告書システムを選択してください。選択後は、それぞれの入力画面・履歴・設定を別々に使用できます。"
     >
