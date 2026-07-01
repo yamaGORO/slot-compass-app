@@ -152,7 +152,7 @@ function CalculationContent() {
       >
         <div className="grid gap-3 lg:grid-cols-[1.05fr_0.95fr]">
           <RetroPanel title="機種選択">
-            <RetroDataRow label="対象機種" description="Excel正本の20機種を単一リストで表示">
+            <RetroDataRow label="対象機種" description="Excel正本の82機種を単一リストで表示">
               <RetroSelect
                 value={selectedMachineId}
                 onChange={(value) => {

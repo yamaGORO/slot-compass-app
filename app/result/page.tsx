@@ -110,11 +110,11 @@ export default function ResultPage() {
           <div className="retro-box-grid">
             <RetroMetric label="時間期待値" value={formatEV(expectedValuePerHour)} unit="円/h" tone={tone} />
             <RetroMetric label="使用入力項目" value={`${inputCount + extraInputCount}`} unit="件" />
-            <RetroMetric label="データ状態" value={machine?.paybackRates.every((rate) => rate === 100) ? '検証中' : '有効'} />
-            <RetroMetric label="出典確認日" value="参照データ" />
+            <RetroMetric label="データ状態" value={machine?.dataStatus ?? (machine?.paybackRates.every((rate) => rate === 100) ? '検証中' : '有効')} />
+            <RetroMetric label="出典確認日" value={machine?.sourceCheckedAt ?? '参照データ'} />
             <RetroMetric label="機種情報" value={machine?.category ?? '不明'} />
             <RetroMetric label="天井情報" value={machine?.ceilingGames ? `${machine.ceilingGames}G` : 'なし'} />
-            <RetroMetric label="設定差要点" value={machine?.bbProbability || machine?.rbProbability ? 'BB/RB' : '未登録'} />
+            <RetroMetric label="設定差要点" value={machine?.settingDiffLabel ?? (machine?.bbProbability || machine?.rbProbability ? 'BB/RB' : '未登録')} />
             <RetroMetric label="計算モデル" value="仮分離" />
           </div>
         </RetroPanel>

@@ -55,7 +55,7 @@ export default function MachinesPage() {
         { href: '/slot/calculation', label: '入力' },
         { href: '/slot/settings', label: '設定' },
       ]}
-      message="Excel正本の20機種を1つのリストにまとめています。機種を選ぶと入力報告書へ移動します。"
+      message="Excel正本の82機種を1つのリストにまとめています。機種を選ぶと入力報告書へ移動します。"
     >
       <RetroPanel title="検索">
         <RetroDataRow label="機種名・メーカー">
@@ -75,7 +75,7 @@ export default function MachinesPage() {
             <MachineRow
               key={machine.id}
               machine={machine}
-              onSelect={() => router.push(`/calculation?machine=${machine.id}`)}
+              onSelect={() => router.push(`/slot/calculation?machine=${machine.id}`)}
             />
           ))
         ) : (

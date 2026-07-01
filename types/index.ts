@@ -20,6 +20,11 @@ export type Machine = {
   releaseYear?: number;
   description?: string;
   sourceUrl?: string;
+  sourceLabel?: string;
+  sourceCheckedAt?: string;
+  dataStatus?: string;
+  settingDiffLabel?: string;
+  settingNotes?: string[];
   /** Base payback rates per setting [s1, s2, s3, s4, s5, s6] */
   paybackRates: [number, number, number, number, number, number];
   /** Machine-specific additional input fields */
