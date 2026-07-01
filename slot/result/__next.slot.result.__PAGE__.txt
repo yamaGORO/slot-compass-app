@@ -1,0 +1,9 @@
+1:"$Sreact.fragment"
+2:I[47257,["/slot-compass-app/_next/static/chunks/0bi7fvzyzs6hs.js","/slot-compass-app/_next/static/chunks/005x6uu9isvse.js","/slot-compass-app/_next/static/chunks/040ryauo1i8.w.js"],"ClientPageRoot"]
+3:I[9489,["/slot-compass-app/_next/static/chunks/0bi7fvzyzs6hs.js","/slot-compass-app/_next/static/chunks/005x6uu9isvse.js","/slot-compass-app/_next/static/chunks/040ryauo1i8.w.js","/slot-compass-app/_next/static/chunks/02.ajz6kzyqm4.js"],"default"]
+6:I[97367,["/slot-compass-app/_next/static/chunks/0bi7fvzyzs6hs.js","/slot-compass-app/_next/static/chunks/005x6uu9isvse.js","/slot-compass-app/_next/static/chunks/040ryauo1i8.w.js"],"OutletBoundary"]
+7:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@4","$@5"]}}],[["$","script","script-0",{"src":"/slot-compass-app/_next/static/chunks/02.ajz6kzyqm4.js","async":true}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"Zjpawzi02SexI7rf-kXvj"}
+4:{}
+5:"$0:rsc:props:children:0:props:serverProvidedParams:params"
+8:null

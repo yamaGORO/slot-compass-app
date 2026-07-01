@@ -1,7 +1,7 @@
 :HL["/slot-compass-app/_next/static/chunks/066jf0nk75nic.css","style"]
 :HL["/slot-compass-app/_next/static/chunks/0xcu7-46.q666.css","style"]
-:HL["/slot-compass-app/_next/static/chunks/0j0-yeq~m73z2.css","style"]
+:HL["/slot-compass-app/_next/static/chunks/0c86da8bonlmi.css","style"]
 :HL["/slot-compass-app/_next/static/media/797e433ab948586e-s.p.08e28id.o-okb.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/slot-compass-app/_next/static/media/ad9c66e761fed85a-s.p.0e4b2z5rxsmxh.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/slot-compass-app/_next/static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"settings","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"H0OJKGkVCGfq58vcTw999"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"settings","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"Zjpawzi02SexI7rf-kXvj"}

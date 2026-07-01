@@ -1,5 +1,5 @@
 1:"$Sreact.fragment"
-2:I[39756,["/slot-compass-app/_next/static/chunks/0x-~76nv.8r5~.js","/slot-compass-app/_next/static/chunks/0d3shmwh5_nmn.js","/slot-compass-app/_next/static/chunks/0.sjxt8ainir6.js"],"default"]
-3:I[37457,["/slot-compass-app/_next/static/chunks/0x-~76nv.8r5~.js","/slot-compass-app/_next/static/chunks/0d3shmwh5_nmn.js","/slot-compass-app/_next/static/chunks/0.sjxt8ainir6.js"],"default"]
+2:I[39756,["/slot-compass-app/_next/static/chunks/0bi7fvzyzs6hs.js","/slot-compass-app/_next/static/chunks/005x6uu9isvse.js","/slot-compass-app/_next/static/chunks/040ryauo1i8.w.js"],"default"]
+3:I[37457,["/slot-compass-app/_next/static/chunks/0bi7fvzyzs6hs.js","/slot-compass-app/_next/static/chunks/005x6uu9isvse.js","/slot-compass-app/_next/static/chunks/040ryauo1i8.w.js"],"default"]
 4:[]
-0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W4","buildId":"H0OJKGkVCGfq58vcTw999"}
+0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W4","buildId":"Zjpawzi02SexI7rf-kXvj"}
