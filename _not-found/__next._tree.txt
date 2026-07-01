@@ -1,4 +1,4 @@
 :HL["/slot-compass-app/_next/static/chunks/066jf0nk75nic.css","style"]
 :HL["/slot-compass-app/_next/static/chunks/0xcu7-46.q666.css","style"]
 :HL["/slot-compass-app/_next/static/chunks/0c86da8bonlmi.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"GJOWDn2GcIfZq1QhgfigK"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"RpkKvFJX-XT7oVYB9uzGT"}
