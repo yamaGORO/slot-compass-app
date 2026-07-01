@@ -3,7 +3,7 @@
 3:I[46907,["/slot-compass-app/_next/static/chunks/0ngcbe.z2wi7h.js","/slot-compass-app/_next/static/chunks/005x6uu9isvse.js","/slot-compass-app/_next/static/chunks/040ryauo1i8.w.js","/slot-compass-app/_next/static/chunks/16r~0q-_z3dy3.js","/slot-compass-app/_next/static/chunks/0bpeobh2.frs6.js"],"default"]
 6:I[97367,["/slot-compass-app/_next/static/chunks/0ngcbe.z2wi7h.js","/slot-compass-app/_next/static/chunks/005x6uu9isvse.js","/slot-compass-app/_next/static/chunks/040ryauo1i8.w.js"],"OutletBoundary"]
 7:"$Sreact.suspense"
-0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@4","$@5"]}}],[["$","script","script-0",{"src":"/slot-compass-app/_next/static/chunks/16r~0q-_z3dy3.js","async":true}],["$","script","script-1",{"src":"/slot-compass-app/_next/static/chunks/0bpeobh2.frs6.js","async":true}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"RpkKvFJX-XT7oVYB9uzGT"}
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{"Component":"$3","serverProvidedParams":{"searchParams":{},"params":{},"promises":["$@4","$@5"]}}],[["$","script","script-0",{"src":"/slot-compass-app/_next/static/chunks/16r~0q-_z3dy3.js","async":true}],["$","script","script-1",{"src":"/slot-compass-app/_next/static/chunks/0bpeobh2.frs6.js","async":true}]],["$","$L6",null,{"children":["$","$7",null,{"name":"Next.MetadataOutlet","children":"$@8"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"AuVxJNrnLdUar93IL8BKe"}
 4:{}
 5:"$0:rsc:props:children:0:props:serverProvidedParams:params"
 8:null
