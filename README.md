@@ -54,12 +54,17 @@ vercel --prod
 
 ## GitHub Pagesで0円公開する手順
 
-このリポジトリはGitHub Pages向けの静的デプロイにも対応しています。
+このリポジトリはGitHub Pages向けの静的デプロイにも対応しています。現在は `.github/workflows/deploy-pages.yml` で、`main` へpushするとGitHub Actionsが `out/` を生成してPagesへ公開します。
 
 1. `main` ブランチへpushします。
-2. `STATIC_EXPORT=true NEXT_PUBLIC_BASE_PATH=/slot-compass-app npm run build` で `out/` を生成します。
-3. `out/` の中身を `gh-pages` ブランチへpushします。
-4. GitHubリポジトリの `Settings` → `Pages` で、公開元を `gh-pages` ブランチに設定します。
+2. GitHub Actionsの `Deploy Pages` が自動実行されます。
+3. 成功後、公開URLへ反映されます。
+
+手元で同じ静的ビルドを確認する場合は次を実行します。
+
+```bash
+STATIC_EXPORT=true NEXT_PUBLIC_BASE_PATH=/slot-compass-app npm run build
+```
 
 公開URLは次です。
 
