@@ -4,7 +4,10 @@ import { useEffect, useState } from 'react';
 import { RetroButton, RetroDataRow, RetroInput, RetroMessage, RetroPanel } from '@/components/ui/Retro';
 
 const ACCESS_KEY = 'slot-compass:access-ok';
-const ACCESS_CODE_HASH = '9631d027f0f564ae30e6fe345fea89282b81f2150375f52796be0b72074cd49b';
+const ACCESS_CODE_HASHES = [
+  '9631d027f0f564ae30e6fe345fea89282b81f2150375f52796be0b72074cd49b',
+  '65fcb553ef0777920a403f018fed2a337c590ce8ea3866979c7d2f7d6714892b',
+];
 
 async function sha256(value: string): Promise<string> {
   const bytes = new TextEncoder().encode(value.trim());
@@ -33,7 +36,7 @@ export default function AccessGate({ children }: { children: React.ReactNode }) 
 
     try {
       const hash = await sha256(code);
-      if (hash === ACCESS_CODE_HASH) {
+      if (ACCESS_CODE_HASHES.includes(hash)) {
         localStorage.setItem(ACCESS_KEY, 'true');
         setUnlocked(true);
         return;
